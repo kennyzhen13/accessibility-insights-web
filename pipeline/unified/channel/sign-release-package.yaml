@@ -42,3 +42,4 @@ jobs:
             parameters:
                 packedOutputPath: '$(System.DefaultWorkingDirectory)/signing-in-progress/${{ parameters.signedArtifactName }}'
                 artifactName: ${{ parameters.signedArtifactName }}
+                validateCodeSigning: true

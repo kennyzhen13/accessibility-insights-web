@@ -3,6 +3,7 @@
 parameters:
     packedOutputPath: null
     artifactName: null
+    validateCodeSigning: false
 
 steps:
     - task: CopyFiles@2
@@ -15,8 +16,22 @@ steps:
           TargetFolder: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
           CleanTargetFolder: true
 
+    - task: securedevelopmentteam.vss-secure-development-tools.build-task-codesignvalidation.CodeSign@1
+      displayName: 'code sign validation'
+      condition: and(succeeded(), eq(variables['validateCodeSigning'], 'true'))
+      inputs:
+          Path: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
+
+    - task: securedevelopmentteam.vss-secure-development-tools.build-task-binskim.BinSkim@3
+      displayName: 'binskim'
+      inputs:
+          toolVersion: Latest
+          InputType: Basic
+          Function: analyze
+          AnalyzeTarget: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}/Accessibility*.*'
+
     - task: PublishBuildArtifacts@1
+      displayName: publish artifact ${{ parameters.artifactName }}
       inputs:
           pathtoPublish: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
           artifactName: ${{ parameters.artifactName }}
-      displayName: publish artifact ${{ parameters.artifactName }}
