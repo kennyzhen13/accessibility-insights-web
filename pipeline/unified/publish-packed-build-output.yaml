@@ -22,14 +22,6 @@ steps:
       inputs:
           Path: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
 
-    - task: securedevelopmentteam.vss-secure-development-tools.build-task-binskim.BinSkim@3
-      displayName: 'binskim'
-      inputs:
-          toolVersion: Latest
-          InputType: Basic
-          Function: analyze
-          AnalyzeTarget: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}/Accessibility*.*'
-
     - task: PublishBuildArtifacts@1
       displayName: publish artifact ${{ parameters.artifactName }}
       inputs:
