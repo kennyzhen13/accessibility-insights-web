@@ -32,7 +32,9 @@ steps:
           verbosity: Normal
       timeoutInMinutes: 5
 
+    # This only works on master since Component Governance doesn't store detection info otherwise
     - task: msospo.ospo-extension.8d7f9abb-6896-461d-9e25-4f74ed65ddb2.notice@0
+      condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
       displayName: 'generate NOTICE.html file'
       inputs:
           outputfile: '$(System.DefaultWorkingDirectory)/src/NOTICE.html'
