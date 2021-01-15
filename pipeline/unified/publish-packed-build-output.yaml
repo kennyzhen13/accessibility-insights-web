@@ -16,11 +16,11 @@ steps:
           TargetFolder: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
           CleanTargetFolder: true
 
-    - task: securedevelopmentteam.vss-secure-development-tools.build-task-codesignvalidation.CodeSign@1
-      displayName: 'code sign validation'
-      condition: and(succeeded(), eq(variables['validateCodeSigning'], 'true'))
-      inputs:
-          Path: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
+    - ${{ if eq(parameters.validateCodeSigning, true) }}:
+        - task: securedevelopmentteam.vss-secure-development-tools.build-task-codesignvalidation.CodeSign@1
+            displayName: 'code sign validation'
+            inputs:
+                Path: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifact ${{ parameters.artifactName }}
