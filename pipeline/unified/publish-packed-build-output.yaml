@@ -18,9 +18,9 @@ steps:
 
     - ${{ if eq(parameters.validateCodeSigning, true) }}:
         - task: securedevelopmentteam.vss-secure-development-tools.build-task-codesignvalidation.CodeSign@1
-            displayName: 'code sign validation'
-            inputs:
-                Path: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
+          displayName: 'code sign validation'
+          inputs:
+              Path: '$(System.ArtifactStagingDirectory)/${{ parameters.artifactName }}'
 
     - task: PublishBuildArtifacts@1
       displayName: publish artifact ${{ parameters.artifactName }}
