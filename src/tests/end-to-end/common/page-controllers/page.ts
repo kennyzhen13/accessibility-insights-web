@@ -203,6 +203,13 @@ export class Page {
         await this.underlyingPage.setViewportSize({ width, height });
     }
 
+    // Avoid using this if possible; tests that rely on this are basically guaranteed to be flaky.
+    // Instead, prefer waiting for specific conditions in the page (selectors to appear/disappear,
+    // network events, etc).
+    public async waitForTimeout(timeoutMilliseconds: number): Promise<void> {
+        await this.underlyingPage.waitForTimeout(timeoutMilliseconds);
+    }
+
     private async screenshotOnError<T>(wrappedFunction: () => Promise<T>): Promise<T> {
         return await screenshotOnError(
             path => this.underlyingPage.screenshot({ path, fullPage: true }),
@@ -211,7 +218,7 @@ export class Page {
     }
 
     public async setFileForUpload(filepath: string) {
-        this.underlyingPage.on('filechooser', async fileChooser => {
+        this.underlyingPage.once('filechooser', async fileChooser => {
             await fileChooser.element().setInputFiles(filepath);
         });
     }
